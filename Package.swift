@@ -16,6 +16,14 @@ let package = Package(
 			name: "SIDSDKDynamic",
 			targets: ["SIDSDKDynamic"]
 		),
+		.library(
+			name: "SIDSDKDynamic-CS",
+			targets: ["SIDSDKDynamic-CS"]
+		),
+		.library(
+			name: "SIDSDKStatic-CS",
+			targets: ["SIDSDKStaticWrapper-CS"]
+		),
 	],
 	targets: [
 		// Бинарная цель для статической библиотеки
@@ -34,6 +42,28 @@ let package = Package(
 			dependencies: [
 				.target(name: "SIDSDKStaticBinary")
 			],
+			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
+			resources: [
+				.process("SIDSDKResourcesBundle.bundle")
+			]
+		),
+		// Бинарная цель для статической библиотеки без Кликстрима
+		.binaryTarget(
+			name: "SIDSDKStaticBinary-CS",
+			path: "./XCFrameworks/SIDSDKStatic-CS.zip"
+		),
+		// Бинарная цель для динамической библиотеки без Кликстрима
+		.binaryTarget(
+			name: "SIDSDKDynamic-CS",
+			path: "XCFrameworks/SIDSDKDynamic-CS.zip"
+		),
+		// Обёртка над статической библиотекой, куда «прокидываем» bundle. Без Кликстрима
+		.target(
+			name: "SIDSDKStaticWrapper-CS",
+			dependencies: [
+				.target(name: "SIDSDKStaticBinary-CS")
+			],
+			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
 			resources: [
 				.process("SIDSDKResourcesBundle.bundle")
 			]
