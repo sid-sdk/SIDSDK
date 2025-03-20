@@ -14,7 +14,7 @@ let package = Package(
 		),
 		.library(
 			name: "SIDSDKDynamic",
-			targets: ["SIDSDKDynamic"]
+			targets: ["SIDSDKDynamicWrapper"]
 		),
 		.library(
 			name: "SIDSDKDynamic-CS",
@@ -25,6 +25,10 @@ let package = Package(
 			targets: ["SIDSDKStaticWrapper-CS"]
 		),
 	],
+	dependencies: [
+		// Добавляем зависимость на Clickstream
+		.package(url: "https://github.com/clickstream-developers/Clickstream-iOS", from: "1.5.0")
+	],
 	targets: [
 		// Бинарная цель для статической библиотеки
 		.binaryTarget(
@@ -33,18 +37,27 @@ let package = Package(
 		),
 		// Бинарная цель для динамической библиотеки
 		.binaryTarget(
-			name: "SIDSDKDynamic",
+			name: "SIDSDKDynamicBinary",
 			path: "XCFrameworks/SIDSDKDynamic.zip"
 		),
 		// Обёртка над статической библиотекой, куда «прокидываем» bundle
 		.target(
 			name: "SIDSDKStaticWrapper",
 			dependencies: [
-				.target(name: "SIDSDKStaticBinary")
+				.target(name: "SIDSDKStaticBinary"),
+				.product(name: "Clickstream", package: "Clickstream-iOS") // Добавляем Clickstream как зависимость
 			],
 			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
 			resources: [
 				.process("SIDSDKResourcesBundle.bundle")
+			]
+		),
+		// Обёртка над динамической библиотекой, куда добавляем Clickstream
+		.target(
+			name: "SIDSDKDynamicWrapper",
+			dependencies: [
+				.target(name: "SIDSDKDynamicBinary"),
+				.product(name: "Clickstream", package: "Clickstream-iOS") // Добавляем Clickstream как зависимость
 			]
 		),
 		// Бинарная цель для статической библиотеки без Кликстрима
