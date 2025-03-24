@@ -1,0 +1,49 @@
+#!/bin/sh
+
+echo "Post-checkout hook is running..."
+
+# Получаем имя текущей ветки
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+echo "Current branch: $BRANCH_NAME"
+
+# Проверяем, что ветка начинается с release
+if echo "$BRANCH_NAME" | grep -q '^release'; then
+    echo "Branch name starts with release: $BRANCH_NAME"
+
+    # Для ветки с -cs
+    if echo "$BRANCH_NAME" | grep -q -- '-cs'; then
+        echo "Found branch with -cs, removing files..."
+        rm -f XCFrameworks/SIDSDKStatic.zip
+        rm -f XCFrameworks/SIDSDKDynamic.zip
+        rm -rf Sources/SIDSDKStaticWrapper
+        rm -rf Sources/SIDSDKDynamicWrapper
+
+        # Подменяем Package.swift на Package-cs.swift
+        if [ -f ".additional-package/Package-cs.swift" ]; then
+            echo "Replacing Package.swift with Package-cs.swift..."
+            cp -f ".additional-package/Package-cs.swift" "Package.swift"
+        else
+            echo "Error: .additional-package/Package-cs.swift not found!"
+            exit 1
+        fi
+    fi
+
+    # Для ветки без -cs
+    if echo "$BRANCH_NAME" | grep -qv -- '-cs'; then
+        echo "Found branch without -cs, removing files..."
+        rm -f XCFrameworks/SIDSDKStatic-cs.zip
+        rm -f XCFrameworks/SIDSDKDynamic-cs.zip
+        rm -rf Sources/SIDSDKStaticWrapper-CS
+
+        # Подменяем Package.swift на Package+cs.swift
+        if [ -f ".additional-package/Package-cs.swift" ]; then
+            echo "Replacing Package.swift with Package+cs.swift..."
+            cp -f ".additional-package/Package+cs.swift" "Package.swift"
+        else
+            echo "Error: .additional-package/Package+cs.swift not found!"
+            exit 1
+        fi
+    fi
+else
+    echo "Branch name does not start with release. Skipping hook."
+fi
