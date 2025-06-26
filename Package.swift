@@ -50,15 +50,14 @@ let package = Package(
 		.target(
 			name: "SIDSDKStaticWrapper",
 			dependencies: [
-				.target(name: "SIDSDKStaticBinary"),
+				"SIDSDKStaticBinary",
 				.product(name: "Clickstream", package: "Clickstream-iOS")
 			],
-			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
+			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"], // исключаем Info.plist из bundle
 			resources: [
 				.process("SIDSDKResourcesBundle.bundle")
 			]
-		),
-		// Бинарная цель для статической библиотеки
+		),		// Бинарная цель для статической библиотеки
 		.binaryTarget(
 			name: "SIDSDKStaticBinary",
 			path: "./XCFrameworks/SIDSDKStatic.zip"
