@@ -22,7 +22,7 @@ let package = Package(
 		),
 		.library(
 			name: "SIDSDKStatic-CS",
-			targets: ["SIDSDKStaticWrapper-CS"]
+			targets: ["SIDSDKStaticWrapper_CS"]
 		)
 	],
 	dependencies: [
@@ -73,9 +73,9 @@ let package = Package(
 
 		// Обёртка над статической библиотекой, куда «прокидываем» bundle. Без Кликстрима
 		.target(
-			name: "SIDSDKStaticWrapper-CS",
+			name: "SIDSDKStaticWrapper_CS",
 			dependencies: [
-				.target(name: "SIDSDKStaticBinary-CS")
+				"SIDSDKStaticBinary-CS"
 			],
 			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
 			resources: [
