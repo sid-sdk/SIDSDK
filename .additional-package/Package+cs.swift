@@ -5,7 +5,7 @@ let package = Package(
 	name: "SIDSDK",
 	defaultLocalization: "en",
 	platforms: [
-		.iOS(.v14)
+		.iOS(.v15)
 	],
 	products: [
 		.library(
@@ -19,8 +19,8 @@ let package = Package(
 	],
 	dependencies: [
 		.package(
-			url: "https://github.com/clickstream-developers/Clickstream-iOS",
-			from: "1.5.0"
+			url: "https://gitverse.ru/clickstream/iOS-SDK-Package",
+			exact: "1.6.0"
 		)
 	],
 	targets: [
@@ -29,7 +29,7 @@ let package = Package(
 			name: "SIDSDKDynamicWrapper",
 			dependencies: [
 				.target(name: "SIDSDKDynamicBinary"),
-				.product(name: "Clickstream", package: "Clickstream-iOS")
+				.product(name: "Clickstream", package: "iOS-SDK-Package")
 			]
 		),
 		.binaryTarget(
@@ -42,7 +42,7 @@ let package = Package(
 			name: "SIDSDKStaticWrapper",
 			dependencies: [
 				.target(name: "SIDSDKStaticBinary"),
-				.product(name: "Clickstream", package: "Clickstream-iOS")
+				.product(name: "Clickstream", package: "iOS-SDK-Package")
 			],
 			exclude: ["SIDSDKResourcesBundle.bundle/Info.plist"],
 			resources: [
