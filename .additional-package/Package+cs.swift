@@ -20,7 +20,7 @@ let package = Package(
 	dependencies: [
 		.package(
 			url: "https://gitverse.ru/clickstream/iOS-SDK-Package.git",
-			exact: "1.6.0"
+			exact: "1.6.1"
 		)
 	],
 	targets: [
